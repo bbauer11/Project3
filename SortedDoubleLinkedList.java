@@ -35,36 +35,59 @@ public class SortedDoubleLinkedList<T> extends BasicDoubleLinkedList<T> {
 			head = new Node(data);
 			tail = head;
 			size++;
+		} else if (size == 1) {
+			if (comparator.compare(head.data, data) <= 0) {
+				tail = new Node(data);
+				head.next = tail;
+				tail.prev = head;
+			} else {
+				head = new Node(data);
+				head.next = tail;
+				tail.prev = head;
+			}
+			size++; 
+			return this;
 		} else {
 			Node temp = new Node(data);
 			Node curr = head;
 			while (comparator.compare(curr.data, temp.data) < 0 && curr.next != null) {
 				curr = curr.next;
 			}
-			if (curr.next == null) {
-				tail.next = temp;
-				temp.prev = tail;
-				tail = temp;
-				return this;
-			} else if (comparator.compare(curr.data, temp.data) == 0) {
+			
+			if (comparator.compare(curr.data, temp.data) == 0) {
 				if (curr == head) {
 					temp.next = curr.next;
 					temp.prev = curr;
 					temp.next.prev = temp;
 					curr.next = temp;
+					size++;
 					return this;
 				} else {
 					temp.next = curr;
 					curr.prev.next = temp;
 					temp.prev = curr.prev;
 					curr.prev = temp;
+					size++;
 					return this;
 				}
+			} else if (curr.next == null) {
+				tail.next = temp;
+				temp.prev = tail;
+				tail = temp;
+				size++;
+				return this;
+			} else if (curr == head) {
+				head.prev = temp;
+				temp.next = head;
+				head = temp;
+				size++;
+				return this;
 			} else {
-				temp.next = curr.next;
-				temp.prev = curr;
-				curr.next.prev = temp;
-				curr.next = temp;
+				temp.next = curr;
+				temp.prev = curr.prev;
+				temp.prev.next = temp;
+				curr.prev = curr;
+				size++;
 				return this;
 			}
 		} 
