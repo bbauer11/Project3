@@ -5,6 +5,8 @@ import java.util.ListIterator;
  * 
  * @author Brian Bauer
  *
+ *
+ *
  * @param <T>
  */
 public class SortedDoubleLinkedList<T> extends BasicDoubleLinkedList<T> {
@@ -20,12 +22,12 @@ public class SortedDoubleLinkedList<T> extends BasicDoubleLinkedList<T> {
 
 	@Override
 	public BasicDoubleLinkedList<T> addToFront(T data) {
-		throw new UnsupportedOperationException("Method not supported for sorted list.");
+		throw new UnsupportedOperationException("Invalid operation for sorted list");
 	}
 	
 	@Override
 	public BasicDoubleLinkedList<T> addToEnd(T data) {
-		throw new UnsupportedOperationException("Method not supported for sorted list.");
+		throw new UnsupportedOperationException("Invalid operation for sorted list");
 	}
 
 	public SortedDoubleLinkedList<T> add(T data) {

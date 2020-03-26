@@ -69,7 +69,8 @@ public class BasicDoubleLinkedList<T> implements Iterable<T> {
 			arrayList.add(curr.data);
 			curr = curr.next;
 		}
-		arrayList.add(curr.data);
+		if (size > 0) 
+			arrayList.add(curr.data);
 		return arrayList;
 	}
 	
@@ -131,51 +132,79 @@ public class BasicDoubleLinkedList<T> implements Iterable<T> {
 		while (comparator.compare(curr.data, temp.data) != 0 && curr.next != null) {
 			curr = curr.next;
 		}
-		if (curr.next == null) 
+		if (curr.next == null && comparator.compare(curr.data, temp.data) != 0) 
 			return null;
-		else {
-			curr.next.prev = curr.prev;
-			curr.prev.next = curr.next;
-			return this;
+		else { 	
+			if (size > 1) {
+				if (curr == head) {
+					curr.next.prev = null;
+					head = curr.next;
+					size--;
+					return this;
+				} else if (curr == tail) {
+					curr.prev.next = null;
+					tail = curr.prev;
+					size--;
+					return this;
+				} else {
+					curr.next.prev = curr.prev;
+					curr.prev.next = curr.next;
+					size--;
+					return this;
+				}
+			} else {
+				head = null;
+				tail = null;
+				size--;
+				return this;
+			}
 		}
 	}
 	
 	class MyIterator<T> implements ListIterator<T> {
 
+		private Node curr;
 		private Node nextNode;
-		
+		private Node prevNode;
+			
 		private MyIterator() {
+			curr = null;
 			nextNode = head;
+			prevNode = null;
 		}
 		
 		@Override
 		public boolean hasNext() {
-			return nextNode.next == null ?  false : true;
+			return nextNode == null ?  false : true;
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
 		public T next() {
 			if (hasNext()) {
-				Node temp = nextNode;
+				prevNode = curr;
+				curr = nextNode;
 				nextNode = nextNode.next;
-				return (T) temp.data;
+				return (T) curr.data;
 			} else 
 				throw new NoSuchElementException("Illegal call to next(); iterator is after end of list.");
 		}
 
 		@Override
 		public boolean hasPrevious() {
-			return nextNode.prev != null ? true : false;
+			return curr != null ? true : false;
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
 		public T previous() {
 			if (hasPrevious()) {
-				Node temp = nextNode;
-				nextNode = nextNode.prev;
-				return (T) temp.data;
+				nextNode = curr;
+				curr = prevNode;
+				if (prevNode == null) 
+					return (T) nextNode.data;
+				prevNode = prevNode.prev;
+				return (T) nextNode.data;
 			}
 			throw new NoSuchElementException();
 		}
